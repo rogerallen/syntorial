@@ -1,6 +1,9 @@
 (ns syntorial.syntorial
   (:use [overtone.live]))
 
+;; handy enums
+(def wave {:saw 0 :pulse 1})
+
 (defsynth syntorial-synth
   [note            60   ; midi note value
    amp             1.0  ; amplitude/volume
@@ -36,7 +39,7 @@
 (comment
 
   ;; play a single note
-  (def s (syntorial-synth :osc1-waveform 1))
+  (def s (syntorial-synth :osc1-waveform (:saw wave)))
   (ctl s :gate 0)
 
   ;; saw
@@ -58,7 +61,7 @@
   ;; On your own 3
   ;; Bass
   (def mpp (midi-poly-player (partial syntorial-synth
-                                      :osc1-waveform   1
+                                      :osc1-waveform   (:pulse wave)
                                       :osc1-pulsewidth 0.4
                                       :cutoff          0.4
                                       :master-volume   8.0
@@ -67,7 +70,7 @@
                                       )))
   ;; Lead
   (def mpp (midi-poly-player (partial syntorial-synth
-                                      :osc1-waveform   0
+                                      :osc1-waveform   (:saw wave)
                                       :cutoff          0.8
                                       :master-volume  -3.0
                                       :attack          0.005
@@ -75,7 +78,7 @@
                                       )))
   ;; Pad
   (def mpp (midi-poly-player (partial syntorial-synth
-                                      :osc1-waveform   1
+                                      :osc1-waveform   (:pulse wave)
                                       :osc1-pulsewidth 0.15
                                       :cutoff          0.5
                                       :master-volume   6.0
@@ -86,8 +89,8 @@
 
   ;; Adding 2nd Oscillator
   (def mpp (midi-poly-player (partial syntorial-synth
-                                      :osc1-waveform   0
-                                      :osc2-waveform   0
+                                      :osc1-waveform   (:saw wave)
+                                      :osc2-waveform   (:saw wave)
                                       :osc2-semi       19
                                       :mix             0.5
                                       :cutoff          0.8
