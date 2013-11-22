@@ -3,7 +3,18 @@
 
 ;; handy enums
 (def wave {:saw 0 :pulse 1})
+(def semitone {:fifth 7, :octave 12,
+               :octave-and-fifth 19, :two-octaves 24,
+               :two-octaves-and-fifth 31,
+               :three-octaves 36})
 
+;; 5 - filter envelopes attack, release.  + amp envelopes
+;; 6 - echo delay time, feedback, spread
+;; 7 - amp envelope sustain, decay
+;; 8 - doubling and detuning
+;; 9 - filter envelope sustain, decay
+;; 10 - sub oscillator
+;; 11 -
 (defsynth syntorial-synth
   [note            60   ; midi note value
    amp             1.0  ; amplitude/volume
@@ -11,7 +22,7 @@
    osc1-pulsewidth 0.50 ;
    osc2-waveform   0    ; 0=saw, 1=pulse
    osc2-pulsewidth 0.50 ;
-   osc2-semi       0    ; semitone offset
+   osc2-semi       0    ; semitone offset (7,12,19,24,31,36)
    mix             0.00 ; mix osc1/osc2
    cutoff          1.0  ; 0.0 - 1.0
    attack          0.150
@@ -101,5 +112,19 @@
 
   (midi-player-stop)
   (stop)
+
+
+  ;; On your own 4
+  (def s (syntorial-synth :osc1-waveform   (:pulse wave)
+                          :osc1-pulsewidth 0.25
+                          :osc2-waveform   (:pulse wave)
+                          :osc2-pulsewidth 0.25
+                          :osc2-semi       (:two-octaves semitone)
+                          :mix             0.25
+                          :cutoff          0.4
+                          :master-volume   2.5
+                          :attack          0.55
+                          :release         1.50))
+  (ctl s :gate 0)
 
 )
